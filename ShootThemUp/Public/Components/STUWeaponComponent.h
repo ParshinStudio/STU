@@ -1,0 +1,43 @@
+// ShootThemUpGame
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Components/ActorComponent.h"
+#include "STUWeaponComponent.generated.h"
+
+class ASTUBaseWeapon;
+//Declare class to create subclass
+
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+class SHOOTTHEMUP_API USTUWeaponComponent : public UActorComponent
+{
+	GENERATED_BODY()
+
+public:	
+
+	USTUWeaponComponent();
+	
+	void StartFire();
+	void StopFire();
+
+
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	TSubclassOf<ASTUBaseWeapon> WeaponClass;
+	//Class Of Weapon Should be spawned from editor bp
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	FName WeaponAttachPointName = "WeaponSocket";
+	// Socket in Char
+
+	virtual void BeginPlay() override;
+
+private:
+	UPROPERTY()
+	ASTUBaseWeapon* CurrentWeapon = nullptr;
+	// Way to declare object should be spawned  in world
+
+	void SpawnWeapon();
+};
