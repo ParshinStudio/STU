@@ -25,22 +25,18 @@ void ASTUBaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	check(WeaponMesh);
+	checkf(DefaultAmmo.Bullets > 0, TEXT("Bullents cant be less or equal zero"));
+	checkf(DefaultAmmo.Clips > 0, TEXT("Clips cant be less or equal zero"))
+	// Check that quantity in blueprint not less than 0
+	CurrentAmmo = DefaultAmmo;
+	// Set from blueprint to all weapons
 }
 
-void ASTUBaseWeapon::StartFire()
-{
-	
-}
+void ASTUBaseWeapon::StartFire(){} // overrided functions
 
-void ASTUBaseWeapon::StopFire()
-{
+void ASTUBaseWeapon::StopFire(){} // overrided functions
 
-}
-
-void ASTUBaseWeapon::MakeShot()
-{
-
-}
+void ASTUBaseWeapon::MakeShot(){} // overrided functions
 
 APlayerController* ASTUBaseWeapon::GetPlayerController() const
 {
@@ -84,10 +80,62 @@ void ASTUBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, c
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.AddIgnoredActor(GetOwner());
 	GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, CollisionParams);
-	//Returan HitResult
+	//Return HitResult
 }
 
-/* NOT USED CODE, NOT REFACTORED, FOR REFERENCE USE ONLY
+void ASTUBaseWeapon::DecreseAmmo()
+{
+	if (CurrentAmmo.Bullets == 0)
+	{
+		UE_LOG(LogBaseWeapon, Warning, TEXT("Clip is empty"));
+		return;
+	}
+	CurrentAmmo.Bullets--;
+	LogAmmo();
+	if (IsClipEmpty() && !IsAmmoEmpty())
+	{
+		StopFire();
+		OnClipEmpty.Broadcast();
+		// Broadcast to all signed classes
+	}
+}
+bool ASTUBaseWeapon::IsAmmoEmpty() const
+{
+	return !CurrentAmmo.Infinite && CurrentAmmo.Clips == 0 && IsClipEmpty();
+}
+bool ASTUBaseWeapon::IsClipEmpty() const
+{
+	return CurrentAmmo.Bullets == 0;
+} 
+void ASTUBaseWeapon::ChangeClip()
+{
+	CurrentAmmo.Bullets = DefaultAmmo.Bullets; 
+	if (!CurrentAmmo.Infinite)
+	{
+		if (CurrentAmmo.Clips == 0)
+		{
+			UE_LOG(LogBaseWeapon, Warning, TEXT("Clips = 0"));
+			return;
+		}
+		CurrentAmmo.Clips--;
+	} // logic function to -- clips when possible
+	UE_LOG(LogBaseWeapon, Display, TEXT("Reloaded"));
+}
+bool ASTUBaseWeapon::CanReload() const
+{
+	return CurrentAmmo.Bullets < DefaultAmmo.Bullets && CurrentAmmo.Clips > 0;
+}
+void ASTUBaseWeapon::LogAmmo()
+{
+	FString AmmoInfo = "Ammo: " + FString::FromInt(CurrentAmmo.Bullets) + " /";
+	AmmoInfo += CurrentAmmo.Infinite ? "Infinite: " : FString::FromInt(CurrentAmmo.Clips);
+	UE_LOG(LogBaseWeapon, Display, TEXT("%s"), *AmmoInfo);
+	// Logging function only
+}
+
+
+/* 
+NOT USED CODE, NOT REFACTORED, FOR REFERENCE USE ONLY
 void ASTUBaseWeapon::MakeShot()
 {
 	if (!GetWorld()) return;
@@ -124,4 +172,5 @@ void ASTUBaseWeapon::MakeShot()
 	{
 		DrawDebugLine(GetWorld(), SocketTransform.GetLocation(), TraceEnd, FColor::Blue, false, 3.0f, 0, 3.0f);
 	}
-} */
+} 
+*/

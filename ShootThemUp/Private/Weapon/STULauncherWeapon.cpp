@@ -12,10 +12,19 @@ void ASTULauncherWeapon::StartFire()
 
 void ASTULauncherWeapon::MakeShot()
 {
-	if (!GetWorld()) return;
+	if (!GetWorld() || IsAmmoEmpty())
+	{
+		StopFire();
+		return;
+		// Stop timer if no ammo in clip or no ammo
+	}
 
 	FVector TraceStart, TraceEnd;
-	if (!GetTraceData(TraceStart, TraceEnd)) return;
+	if (!GetTraceData(TraceStart, TraceEnd))
+	{
+		StopFire();
+		return;
+	}
 	// Return TraceStart, TraceEnd
 
 	FHitResult HitResult;
@@ -39,4 +48,6 @@ void ASTULauncherWeapon::MakeShot()
 		Projectile->FinishSpawning(SpawnTransform);
 		// FinishSpawning when params set
 	}
+
+	DecreseAmmo();
 }

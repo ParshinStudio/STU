@@ -26,6 +26,8 @@ void USTUHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	check(MaxHealth > 0);
+
 	SetHealth(MaxHealth);
 	//Set Start Health to Max
 

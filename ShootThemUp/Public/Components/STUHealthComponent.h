@@ -4,11 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "STUCoreTypes.h"
 #include "STUHealthComponent.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FOnDeath)
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float)
-// !!! Declare of delegate
 
 UCLASS( ClassGroup=(Custom), meta = (BlueprintSpawnableComponent))
 class SHOOTTHEMUP_API USTUHealthComponent : public UActorComponent
@@ -24,9 +22,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool IsDead() const { return FMath::IsNearlyZero(Health); }
+	UFUNCTION(BlueprintCallable)
+	float GetHealthPercent() const { return Health / MaxHealth; }
 
-	FOnDeath OnDeath;
-	FOnHealthChanged OnHealthChanged;
+	FOnDeathSignature OnDeath;
+	FOnHealthChangedSignature OnHealthChanged;
 	// !!! Declare of delegate
 	
 protected:

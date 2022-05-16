@@ -90,6 +90,8 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Run", IE_Released, this, &ASTUBaseCharacter::OnStopRunning);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &USTUWeaponComponent::StartFire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &USTUWeaponComponent::StopFire);
+	PlayerInputComponent->BindAction("NextWeapon", IE_Pressed, WeaponComponent, &USTUWeaponComponent::NextWeapon);
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, WeaponComponent, &USTUWeaponComponent::Reload);
 	// WeaponComponent, &USTUWeaponComponent::Fire is direct function calling
 	// Jump is engine function
 	// Bind Axis/Action in InputComponent to functions and pawn
@@ -167,6 +169,8 @@ void ASTUBaseCharacter::OnDeath()
 	}
 	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	//Ignore collision after dead
+	WeaponComponent->StopFire();
+	//Stop timers when dead
 }
 
 void ASTUBaseCharacter::OnHealthChanged(float Health)
