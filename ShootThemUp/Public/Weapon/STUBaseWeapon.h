@@ -30,6 +30,11 @@ public:
 	virtual void StopFire();
 	// Will be used misc blueprints, thats why its virtual
 
+	FWeaponUIData GetUIData() const { return UIData; }
+	// Func to return UIData to other class
+	FAmmoData GetAmmoData() const { return CurrentAmmo; }
+	// Func to return CurrentAmmo to other class
+
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -43,6 +48,11 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FAmmoData DefaultAmmo {15, 10, false};
+	// Default weapon structure
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FWeaponUIData UIData;
+	// Declare UIData for weapons
 
 	virtual void BeginPlay() override;
 

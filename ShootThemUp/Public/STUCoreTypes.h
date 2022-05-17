@@ -2,11 +2,12 @@
 
 #include "STUCoreTypes.generated.h"
 
-// weapon
+// Weapon base class
 class ASTUBaseWeapon;
 
 DECLARE_MULTICAST_DELEGATE(FOnClipEmptySignature);
 
+// Ammo struct
 USTRUCT(BlueprintType)
 struct FAmmoData
 {
@@ -22,16 +23,30 @@ struct FAmmoData
     bool Infinite;
 };
 
+// Struct for char weapon
 USTRUCT(BlueprintType)
 struct FWeaponData
 {
     GENERATED_USTRUCT_BODY()
 
-        UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-        TSubclassOf<ASTUBaseWeapon> WeaponClass;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+    TSubclassOf<ASTUBaseWeapon> WeaponClass;
 
-        UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-        UAnimMontage* ReloadAnimMontage;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+    UAnimMontage* ReloadAnimMontage;
+};
+
+// Struct for UI
+USTRUCT(BlueprintType)
+struct FWeaponUIData
+{
+    GENERATED_USTRUCT_BODY()
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    UTexture2D* MainIcon;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    UTexture2D* CrossHairIcon;
 };
 
 // health

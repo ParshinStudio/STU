@@ -13,6 +13,12 @@ UCLASS()
 class SHOOTTHEMUP_API ASTUGameHUD : public AHUD
 {
 	GENERATED_BODY()
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget> PlayerHUDWidgetClass;
+
+	virtual void BeginPlay() override;
 	
 public:
 	virtual void DrawHUD() override;

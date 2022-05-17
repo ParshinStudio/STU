@@ -214,3 +214,22 @@ void USTUWeaponComponent::ChangeClip()
 	PlayAnimMontage(CurrentReloadAnimMontage);
 	// Stop timer when reload or clip empty and activate inclass function
 }
+
+bool USTUWeaponComponent::GetCurrentWeaponUIData(FWeaponUIData& UIData) const
+{
+	if (CurrentWeapon)
+	{
+		UIData = CurrentWeapon->GetUIData(); // Set UIData for weapon in hands
+		return true;
+	}
+	return false;
+}
+bool USTUWeaponComponent::GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const
+{
+	if (CurrentWeapon)
+	{
+		AmmoData = CurrentWeapon->GetAmmoData(); // Set UIData for weapon in hands
+		return true;
+	}
+	return false;
+}

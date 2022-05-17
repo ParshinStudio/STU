@@ -26,6 +26,8 @@ public:
 	void NextWeapon();
 	void Reload();
 
+	bool GetCurrentWeaponUIData(FWeaponUIData& UIData) const; // Get from base weapon
+	bool GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const; // Get from base weapon
 
 protected:
 

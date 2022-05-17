@@ -24,6 +24,7 @@ public:
 	bool IsDead() const { return FMath::IsNearlyZero(Health); }
 	UFUNCTION(BlueprintCallable)
 	float GetHealthPercent() const { return Health / MaxHealth; }
+	// For WBP
 
 	FOnDeathSignature OnDeath;
 	FOnHealthChangedSignature OnHealthChanged;
