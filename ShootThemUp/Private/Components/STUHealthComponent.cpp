@@ -79,3 +79,13 @@ void USTUHealthComponent::SetHealth(float NewHealth)
 	OnHealthChanged.Broadcast(Health);
 	// !!!Broadcast to all signed actors with param
 }
+bool USTUHealthComponent::TryToAddHealth(float HealthAmount)
+{
+	if (IsDead() || IsHealthFull()) return false;
+	SetHealth(Health + HealthAmount);
+	return true;
+}
+bool USTUHealthComponent::IsHealthFull() const
+{
+	return FMath::IsNearlyEqual(Health, MaxHealth);
+}

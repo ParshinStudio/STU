@@ -8,6 +8,8 @@
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 
+#include "Weapon/Components/STUWeaponFXComponent.h" // Niagara component
+
 ASTUProjectile::ASTUProjectile()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -17,12 +19,15 @@ ASTUProjectile::ASTUProjectile()
 	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	CollisionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
 	// Projectile will be blocked by all colloson channels and ignore physics(work with QueryOnly)
+	CollisionComponent->bReturnMaterialOnMove = true; // Enable physmat collision for phys object
 	SetRootComponent(CollisionComponent);
 
 	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovementComponent");
 	MovementComponent->InitialSpeed = 2000.0f;
 	MovementComponent->ProjectileGravityScale = 0.4f;
 	// Create and set default ProjectileMovementComponent params
+	WeaponFXComponent = CreateDefaultSubobject<USTUWeaponFXComponent>("WeaponFXComponent");
+
 }
 
 void ASTUProjectile::BeginPlay()
@@ -30,6 +35,7 @@ void ASTUProjectile::BeginPlay()
 	Super::BeginPlay();
 	check(MovementComponent);
 	check(CollisionComponent);
+	check(WeaponFXComponent);
 	MovementComponent->Velocity = ShotDirection * MovementComponent->InitialSpeed;
 	// Set InitialSpeed to Velocity
 	CollisionComponent->IgnoreActorWhenMoving(GetOwner(), true);
@@ -48,8 +54,8 @@ void ASTUProjectile::OnProjectileHit
 	UGameplayStatics::ApplyRadialDamage
 	(GetWorld(), DamageAmount, GetActorLocation(), DamageRadius, UDamageType::StaticClass(), { GetOwner()}, this, nullptr, DoFullDamage);
 	
-	DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 24, FColor::Red, false, 5.0f);
-
+	//DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 24, FColor::Red, false, 5.0f);
+	WeaponFXComponent->PlayImpactFX(Hit);
 	Destroy();
 	// In engine function
 }

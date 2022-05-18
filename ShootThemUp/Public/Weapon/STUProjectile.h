@@ -8,6 +8,7 @@
 
 class USphereComponent;
 class UProjectileMovementComponent;
+class USTUWeaponFXComponent;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUProjectile : public AActor
@@ -37,6 +38,9 @@ protected:
 	float LifeSeconds = 5.0f;
 
 	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere, Category = "VFX")
+	USTUWeaponFXComponent* WeaponFXComponent; // Niagara component
 
 private:
 	FVector ShotDirection;

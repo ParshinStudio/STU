@@ -5,7 +5,7 @@
 // Weapon base class
 class ASTUBaseWeapon;
 
-DECLARE_MULTICAST_DELEGATE(FOnClipEmptySignature);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnClipEmptySignature, ASTUBaseWeapon*);
 
 // Ammo struct
 USTRUCT(BlueprintType)

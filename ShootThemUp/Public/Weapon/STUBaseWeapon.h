@@ -35,6 +35,8 @@ public:
 	FAmmoData GetAmmoData() const { return CurrentAmmo; }
 	// Func to return CurrentAmmo to other class
 
+	bool TryToAddAmmo(int32 ClipsAmount); // for ammo pickup called from weapon component
+
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -69,6 +71,8 @@ protected:
 	bool IsAmmoEmpty() const;
 	bool IsClipEmpty() const;
 	void LogAmmo();
+
+	bool IsAmmoFull() const; // for ammo add
 
 private:
 	FAmmoData CurrentAmmo;
