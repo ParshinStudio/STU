@@ -10,7 +10,8 @@
 ASTUAICharacter::ASTUAICharacter(const FObjectInitializer& ObjInit) :Super(ObjInit.SetDefaultSubobjectClass<USTUAIWeaponComponent>("WeaponComponent")) 
 // Custom constructor with params (WeaponComponent replace)
 {
-	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	// AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned; // When in already created in world
+	AutoPossessAI = EAutoPossessAI::Disabled; // When spawn from code (For PlayerState creation)
 
 	AIControllerClass = ASTUAIController::StaticClass();
 	// Replacing to blueprint class in editor 

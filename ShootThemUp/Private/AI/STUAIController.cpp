@@ -11,6 +11,8 @@ ASTUAIController::ASTUAIController()
 {
 	STUAIPerceptionComponent = CreateDefaultSubobject<USTUAIPerceptionComponent>("STUPerceprionComponent");
 	SetPerceptionComponent(*STUAIPerceptionComponent); // Create and set PerceptionComponent
+
+	bWantsPlayerState = true; // Create player states for spawned in world controllers and pawns
 }
 
 void ASTUAIController::Tick(float DeltaTime)
