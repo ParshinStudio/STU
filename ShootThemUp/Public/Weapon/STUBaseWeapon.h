@@ -10,7 +10,8 @@
 
 
 class USkeletalMeshComponent;
-
+class UNiagaraSystem;
+class UNiagaraComponent;
 
 
 UCLASS()
@@ -36,6 +37,8 @@ public:
 	// Func to return CurrentAmmo to other class
 
 	bool TryToAddAmmo(int32 ClipsAmount); // for ammo pickup called from weapon component
+	bool IsAmmoEmpty() const;
+	bool IsAmmoFull() const; // for ammo add and decorator
 
 protected:
 
@@ -56,6 +59,10 @@ protected:
 	FWeaponUIData UIData;
 	// Declare UIData for weapons
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UNiagaraSystem* MuzzleFX;
+	// Socket Niagara system in weapon
+	
 	virtual void BeginPlay() override;
 
 	virtual void MakeShot();
@@ -68,11 +75,10 @@ protected:
 	void MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
 
 	void DecreseAmmo();
-	bool IsAmmoEmpty() const;
 	bool IsClipEmpty() const;
 	void LogAmmo();
 
-	bool IsAmmoFull() const; // for ammo add
+	UNiagaraComponent* SpawnMuzzleFX();
 
 private:
 	FAmmoData CurrentAmmo;

@@ -9,6 +9,8 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/Controller.h"
 // Allow to get character and controller
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseWeapon, All, All)
 
@@ -48,9 +50,22 @@ APlayerController* ASTUBaseWeapon::GetPlayerController() const
 
 bool ASTUBaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const
 {
-	const auto Controller = GetPlayerController();
-	if (!Controller) return false;
-	Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
+	const auto STUCharacter = Cast<ACharacter>(GetOwner());
+	if (!STUCharacter) return false;
+
+	if (STUCharacter->IsPlayerControlled())
+	{
+		const auto Controller = GetPlayerController();
+		if (!Controller) return false;
+		Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
+		// For player Char
+	}
+	else
+	{
+		ViewLocation = GetMuzzleWorldLocation();
+		ViewRotation = WeaponMesh->GetSocketRotation(MuzzleSocketName);
+		//For AI Char
+	}
 	return true;
 	// Try to get view point 
 }
@@ -172,6 +187,10 @@ bool ASTUBaseWeapon::TryToAddAmmo(int32 ClipsAmount)
 	return true;
 }
 
+UNiagaraComponent* ASTUBaseWeapon::SpawnMuzzleFX()
+{
+	return UNiagaraFunctionLibrary::SpawnSystemAttached(MuzzleFX, WeaponMesh, MuzzleSocketName, FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::SnapToTarget, true);
+} // Function to spawn Niagara system
 
 /* 
 NOT USED CODE, NOT REFACTORED, FOR REFERENCE USE ONLY

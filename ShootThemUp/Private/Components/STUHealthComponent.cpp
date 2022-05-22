@@ -3,16 +3,16 @@
 
 #include "Components/STUHealthComponent.h"
 #include "GameFramework/Actor.h"
-// Allow to work with OnTakeAnyDamage
+#include "GameFramework/Pawn.h"
+#include "GameFramework/Controller.h"
 //#include "Dev/STUFireDamageType.h"
 //#include "Dev/STUIceDamageType.h"
-// Include Damage Types Classes
 #include "Math/UnrealMathUtility.h"
 // Allow work with FMath
 #include "Engine/World.h"
 #include "TimerManager.h"
 // Allow work with timer and world time
-
+#include "Camera/CameraComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All)
 
@@ -60,6 +60,7 @@ void USTUHealthComponent::OnTakeAnyDamage(AActor* DamagedActor, float Damage, co
 	}
 	// If alive, check Autoheal true, Get timer from world and set timer with params
 	// (HealTimerHandle(Timer body), actor which is timer inside, call function inside, Update rate(calling function every...) , Replay?, Delay before start
+	PlayCameraShake();
 }
 
 void USTUHealthComponent::HealUpdate()
@@ -74,9 +75,11 @@ void USTUHealthComponent::HealUpdate()
 
 void USTUHealthComponent::SetHealth(float NewHealth)
 {
-	Health = FMath::Clamp(NewHealth, 0.0f, MaxHealth);
+	const auto NextHealth = FMath::Clamp(NewHealth, 0.0f, MaxHealth);
+	const auto HealthDelta = NextHealth - Health;
+	Health = NextHealth;
 	// Modify Health but not allow to increase more than MaxHealth
-	OnHealthChanged.Broadcast(Health);
+	OnHealthChanged.Broadcast(Health, HealthDelta);
 	// !!!Broadcast to all signed actors with param
 }
 bool USTUHealthComponent::TryToAddHealth(float HealthAmount)
@@ -88,4 +91,15 @@ bool USTUHealthComponent::TryToAddHealth(float HealthAmount)
 bool USTUHealthComponent::IsHealthFull() const
 {
 	return FMath::IsNearlyEqual(Health, MaxHealth);
+}
+
+void USTUHealthComponent::PlayCameraShake()
+{
+	if (IsDead()) return;
+	const auto Player = Cast<APawn>(GetOwner());
+	if (!Player) return;
+	const auto Controller = Player->GetController<APlayerController>();
+	if (!Controller || !Controller->PlayerCameraManager) return;
+
+	Controller->PlayerCameraManager->StartCameraShake(CameraShake);
 }

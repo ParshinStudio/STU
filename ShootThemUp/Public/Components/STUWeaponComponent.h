@@ -21,9 +21,9 @@ public:
 
 	USTUWeaponComponent();
 	
-	void StartFire();
+	virtual void StartFire();
 	void StopFire();
-	void NextWeapon();
+	virtual void NextWeapon();
 	void Reload();
 
 	bool GetCurrentWeaponUIData(FWeaponUIData& UIData) const; // Get from base weapon
@@ -31,8 +31,19 @@ public:
 
 	bool TryToAddAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType, int32 ClipsAmount);
 
+	bool NeedAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType);
+
 protected:
 
+	UPROPERTY()
+	ASTUBaseWeapon* CurrentWeapon = nullptr;
+	// Way to declare object should be spawned  in world
+	UPROPERTY()
+	TArray<ASTUBaseWeapon*> Weapons;
+	// Array of weapons
+
+	int32 CurrentWeaponIndex = 0;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	TArray<FWeaponData> WeaponData;
 	//Array Of Weapons stucts with montage which should be spawned from editor bp
@@ -50,15 +61,13 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-private:
-	UPROPERTY()
-	ASTUBaseWeapon* CurrentWeapon = nullptr;
-	// Way to declare object should be spawned  in world
-	UPROPERTY()
-	TArray<ASTUBaseWeapon*> Weapons;
-	// Array of weapons
-	int32 CurrentWeaponIndex = 0;
+	bool CanFire() const;
+	bool CanEquip() const;
 
+	void EquipWeapon(int32 WeaponIndex);
+
+private:
+	
 	UPROPERTY()
 	UAnimMontage* CurrentReloadAnimMontage = nullptr;
 	// Montage which will be used for current weapon in slot
@@ -68,7 +77,6 @@ private:
 
 	void SpawnWeapons();
 	void AttachWeaponToSocket(ASTUBaseWeapon* Weapon, USceneComponent* SceneComponent, const FName& SocketName);
-	void EquipWeapon(int32 WeaponIndex);
 
 	void PlayAnimMontage(UAnimMontage* Animation);
 	void InitAnimations();
@@ -76,15 +84,13 @@ private:
 	void OnEquipFinished(USkeletalMeshComponent* MeshComponent);
 	void OnReloadFinished(USkeletalMeshComponent* MeshComponent);
 	
-	bool CanFire() const;
-	bool CanEquip() const;
 	bool CanReload() const;
 
 	void OnEmptyClip(ASTUBaseWeapon* AmmoEmptyWeapon);
 	void ChangeClip();
 
 	/* 
-	DECLARED IN OTHER HEADER
+	DECLARED IN OTHER HEADER STUUtils
 	template<typename T>
 	T* FindNotifyByClass(UAnimSequenceBase* Animation) // UAnimSequenceBase is holder of notifies 
 	{

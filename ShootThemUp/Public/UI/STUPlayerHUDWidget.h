@@ -29,6 +29,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	bool IsPlayerSpectating() const;
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "VFX")
+	void OnTakeDamage();
+	// Allow call function from bp graph
+
+	virtual bool Initialize() override;
+
+private:
+	void OnHealthChanged(float Health, float HealthDelta);
 };
 
 /*

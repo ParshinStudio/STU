@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "STUCoreTypes.h"
 #include "STUWeaponFXComponent.generated.h"
 
 class UNiagaraSystem; // Forward niagara declaration
@@ -21,8 +22,8 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
-	UNiagaraSystem* DefaultEffect;
+	FImpactData DefaultImpactData;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
-	TMap<UPhysicalMaterial*, UNiagaraSystem*> EffectsMap;
-	// Niagara system bp
+	TMap<UPhysicalMaterial*, FImpactData> ImpactDataMap;
+	// Niagara system params in bp
 };

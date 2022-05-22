@@ -260,3 +260,15 @@ bool USTUWeaponComponent::TryToAddAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType, i
 	}
 	return false; // receive ASTUBaseWeapon and try to compare with arrays of weapons, call TryToAddAmmo in base weapon
 }
+
+bool USTUWeaponComponent::NeedAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType)
+{
+	for (const auto Weapon : Weapons)
+	{
+		if (Weapon && Weapon->IsA(WeaponType))
+		{
+			return !Weapon->IsAmmoFull(); // In base weapon
+		}
+	}
+	return false; 
+}

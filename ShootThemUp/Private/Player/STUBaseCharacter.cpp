@@ -57,9 +57,10 @@ void ASTUBaseCharacter::BeginPlay()
 	check(CharHealthComponent);
 	check(HealthTextComponent);
 	check(GetCharacterMovement());
+	check(GetMesh());
 	// Check than components exist
 
-	OnHealthChanged(CharHealthComponent->GetHealth());
+	OnHealthChanged(CharHealthComponent->GetHealth(), 0.0f);
 	// Set Health param in text after health component created
 	CharHealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
 	// !!! Sign from HealthComponent OnDeath delegate and send character and his function in params
@@ -160,7 +161,7 @@ void ASTUBaseCharacter::OnDeath()
 {
 	UE_LOG(BaseCharacterLog, Warning, TEXT("PLAYER %s is dead"), *GetName()); // *Getname string->char array
 
-	PlayAnimMontage(DeathAnimMontage);
+	// PlayAnimMontage(DeathAnimMontage);
 	GetCharacterMovement()->DisableMovement();
 	SetLifeSpan(5.0f);
 	if (Controller)
@@ -171,9 +172,13 @@ void ASTUBaseCharacter::OnDeath()
 	//Ignore collision after dead
 	WeaponComponent->StopFire();
 	//Stop timers when dead
+
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	GetMesh()->SetSimulatePhysics(true); 
+	// Enable mesh relaxation
 }
 
-void ASTUBaseCharacter::OnHealthChanged(float Health)
+void ASTUBaseCharacter::OnHealthChanged(float Health, float HealthDelta)
 {
 	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 	// SetText of HealthTextComponent as Health variable in string

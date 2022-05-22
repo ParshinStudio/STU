@@ -27,11 +27,15 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Pickup")
 	float RespawnTime = 5.0f;
 
+	UPROPERTY(EditAnywhere, Category = "Pickup")
+	bool CouldBeTakenTest = true;
+
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 public:	
 	
 	virtual void Tick(float DeltaTime) override;
+	bool CouldBeTaken() const;
 
 private:
 	float RotationYaw = 0.0f;
@@ -40,4 +44,6 @@ private:
 	virtual bool GivePickupTo(APawn* PlayerPawn);
 	void PickupWasTaken();
 	void Respawn();
+
+	//FTimerHandle RespawnTimerHandle;
 };

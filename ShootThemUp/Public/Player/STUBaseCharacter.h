@@ -68,6 +68,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Damage")
 	float GetMovementDirection() const;
 	// Get Movement vector
+	
+	virtual void OnDeath();
+	// Death Function
 
 private:
 	
@@ -83,9 +86,7 @@ private:
 	void OnStopRunning();
 	// Declare fast running
 
-	void OnDeath();
-	// Death Function
-	void OnHealthChanged(float Health);
+	void OnHealthChanged(float Health, float HealthDelta);
 	// Health Change Function
 
 	UFUNCTION()
