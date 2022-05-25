@@ -47,11 +47,12 @@ bool USTUPlayerHUDWidget::IsPlayerSpectating() const
 
 bool USTUPlayerHUDWidget::Initialize()
 {
-	const auto HealthComponent = STUUTils::GetSTUPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
-	if (HealthComponent)
+	if (GetOwningPlayer())
 	{
-		HealthComponent->OnHealthChanged.AddUObject(this, &USTUPlayerHUDWidget::OnHealthChanged);
+		GetOwningPlayer()->GetOnNewPawnNotifier().AddUObject(this, &USTUPlayerHUDWidget::OnNewPawn);
+		// When new pawn, OnNewPawn calling (delegate in engine controller)
 	}
+	OnNewPawn(GetOwningPlayerPawn()); // First time need to call manually to get new pawn
 	return Super::Initialize();
 }
 void USTUPlayerHUDWidget::OnHealthChanged(float Health, float HealthDelta)
@@ -60,6 +61,17 @@ void USTUPlayerHUDWidget::OnHealthChanged(float Health, float HealthDelta)
 	{
 		OnTakeDamage();
 	}
+}
+
+void USTUPlayerHUDWidget::OnNewPawn(APawn* NewPawn)
+{
+	const auto HealthComponent = STUUTils::GetSTUPlayerComponent<USTUHealthComponent>(NewPawn);
+	if (HealthComponent && !HealthComponent->OnHealthChanged.IsBoundToObject(this)) // Check that delegate signed 
+	{
+		HealthComponent->OnHealthChanged.AddUObject(this, &USTUPlayerHUDWidget::OnHealthChanged); 
+		// Sign on delegate in health component
+	}
+
 }
 
 /* FOR USING WITHOUT STUUtils template

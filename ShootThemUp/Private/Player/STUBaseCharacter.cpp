@@ -28,22 +28,11 @@ ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInit):Super(Ob
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArmComponent");
-	SpringArmComponent->SetupAttachment(GetRootComponent());
-	// Create SpringArmComponent and add to component
-	SpringArmComponent->bUsePawnControlRotation = true;
-	// All Pawn to control SpringArmComponent Rotation
-	SpringArmComponent->SocketOffset = FVector(0.0f, 100.0f, 80.0f);
-	// Set Camera position
-	CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
-	CameraComponent->SetupAttachment(SpringArmComponent);
-	// Create Camera and add to component, attach to SpringArmComponent
-
 	CharHealthComponent = CreateDefaultSubobject<USTUHealthComponent>(TEXT("CharacterHealthComponent"));
 	// Create HealthComponent
-	HealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthTextComponent");
-	HealthTextComponent->SetupAttachment(GetRootComponent());
-	HealthTextComponent->SetOwnerNoSee(true);
+	//HealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthTextComponent");
+	//HealthTextComponent->SetupAttachment(GetRootComponent());
+	//HealthTextComponent->SetOwnerNoSee(true);
 	// Create TextRenderComponent
 
 	WeaponComponent = CreateDefaultSubobject<USTUWeaponComponent>(TEXT("WeaponComponent"));
@@ -55,7 +44,6 @@ void ASTUBaseCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	check(CharHealthComponent);
-	check(HealthTextComponent);
 	check(GetCharacterMovement());
 	check(GetMesh());
 	// Check than components exist
@@ -77,68 +65,9 @@ void ASTUBaseCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	check(WeaponComponent);
-	check(PlayerInputComponent);
-	PlayerInputComponent->BindAxis("MoveForward", this, &ASTUBaseCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &ASTUBaseCharacter::MoveRight);
-	PlayerInputComponent->BindAxis("LookUp", this, &ASTUBaseCharacter::LookUp);
-	PlayerInputComponent->BindAxis("TurnAround", this, &ASTUBaseCharacter::TurnAround);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ASTUBaseCharacter::Jump); 
-	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ASTUBaseCharacter::OnStartRunning);
-	PlayerInputComponent->BindAction("Run", IE_Released, this, &ASTUBaseCharacter::OnStopRunning);
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &USTUWeaponComponent::StartFire);
-	PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &USTUWeaponComponent::StopFire);
-	PlayerInputComponent->BindAction("NextWeapon", IE_Pressed, WeaponComponent, &USTUWeaponComponent::NextWeapon);
-	PlayerInputComponent->BindAction("Reload", IE_Pressed, WeaponComponent, &USTUWeaponComponent::Reload);
-	// WeaponComponent, &USTUWeaponComponent::Fire is direct function calling
-	// Jump is engine function
-	// Bind Axis/Action in InputComponent to functions and pawn
-
-}
-
-
-void ASTUBaseCharacter::MoveForward(float Amount)
-{
-	IsMovingForward = Amount > 0.0f;
-	AddMovementInput(GetActorForwardVector(), Amount);
-	// Get Vector and multiply this vector by Amount
-}
-
-void ASTUBaseCharacter::MoveRight(float Amount)
-{
-	AddMovementInput(GetActorRightVector(), Amount);
-	// Get Vector and multiply this vector by Amount
-}
-
-void ASTUBaseCharacter::LookUp(float Amount)// Can be binded directly because its receive one parameter
-{
-	AddControllerPitchInput(Amount);
-	// Vertical Camera Rotation (In blueprint enable "Use Pawn Control Rotation" if use without SpringArm)
-}
-
-void ASTUBaseCharacter::TurnAround(float Amount) // Can be binded directly because its receive one parameter
-{
-	AddControllerYawInput(Amount);
-	// Horizontal Camera Rotation 
-}
-
-void ASTUBaseCharacter::OnStartRunning() // Control WantsToRun state
-{
-	WantsToRun = true;
-}
-
-void ASTUBaseCharacter::OnStopRunning() // Control WantsToRun state
-{
-	WantsToRun = false;
-}
-
 bool ASTUBaseCharacter::IsRunning() const
 {
-	return WantsToRun && IsMovingForward && !GetVelocity().IsZero();
-	// Return true if bools are true
+	return false;
 }
 
 float ASTUBaseCharacter::GetMovementDirection() const
@@ -164,10 +93,7 @@ void ASTUBaseCharacter::OnDeath()
 	// PlayAnimMontage(DeathAnimMontage);
 	GetCharacterMovement()->DisableMovement();
 	SetLifeSpan(5.0f);
-	if (Controller)
-	{
-		Controller->ChangeState(NAME_Spectating);
-	}
+
 	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	//Ignore collision after dead
 	WeaponComponent->StopFire();
@@ -180,7 +106,7 @@ void ASTUBaseCharacter::OnDeath()
 
 void ASTUBaseCharacter::OnHealthChanged(float Health, float HealthDelta)
 {
-	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
+	// HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 	// SetText of HealthTextComponent as Health variable in string
 }
 
@@ -200,3 +126,11 @@ void ASTUBaseCharacter::OnGroundLanded(const FHitResult& Hit)
 
 }
 
+void ASTUBaseCharacter::SetPlayerColor(const FLinearColor& Color) // Receive color and call from gamemode
+{
+	const auto MaterialInst = GetMesh()->CreateAndSetMaterialInstanceDynamic(0);
+	if (!MaterialInst) return;
+
+	MaterialInst->SetVectorParameterValue(MaterialColorName, Color);
+	// Set received 
+}

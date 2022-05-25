@@ -6,13 +6,10 @@
 #include "GameFramework/Character.h"
 #include "STUBaseCharacter.generated.h"
 
-class UCameraComponent;
-// Declare Camera
-class USpringArmComponent;
-// Declare Camera SpringArm
+
 class USTUHealthComponent;
 // Declare HealthComponent
-class UTextRenderComponent;
+// class UTextRenderComponent;
 // Declare TextRenderComponent
 class USTUWeaponComponent;
 
@@ -28,17 +25,10 @@ public:
 protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	UCameraComponent* CameraComponent;
-	// Declare Camera
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	USpringArmComponent* SpringArmComponent;
-	// Declare Camera SpringArm
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USTUHealthComponent* CharHealthComponent;
 	// Declare HealthComponent
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	UTextRenderComponent* HealthTextComponent;
+	// UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	// UTextRenderComponent* HealthTextComponent;
 	// Declare TextRenderComponent
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
@@ -55,36 +45,26 @@ protected:
 	FVector2D LandedDamage = FVector2D(10.0f, 100.0f);
 	// Landed params to interpolate
 
+	UPROPERTY(EditDefaultsOnly, Category = "Material")
+	FName MaterialColorName = "Paint Color"; // Get in actor material color
+
 	virtual void BeginPlay() override;
 
 public:
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	UFUNCTION(BlueprintCallable, Category = "Damage")
-	bool IsRunning() const;
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+	virtual bool IsRunning() const;
 	// Declare statement for fast running
 	UFUNCTION(BlueprintCallable, Category = "Damage")
 	float GetMovementDirection() const;
 	// Get Movement vector
 	
 	virtual void OnDeath();
-	// Death Function
+
+	void SetPlayerColor(const FLinearColor& Color);
 
 private:
-	
-	void MoveForward(float Amount);
-	void MoveRight(float Amount);
-	// Declare movement functions
-	void LookUp(float Amount);
-	void TurnAround(float Amount);
-	// Declare camera movement functions
-	bool WantsToRun = false;
-	bool IsMovingForward = false;
-	void OnStartRunning();
-	void OnStopRunning();
-	// Declare fast running
 
 	void OnHealthChanged(float Health, float HealthDelta);
 	// Health Change Function

@@ -6,11 +6,16 @@
 #include "AI/STUAICharacter.h"
 #include "Components/STUAIPerceptionComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Components/STURespawnComponent.h"
 
 ASTUAIController::ASTUAIController()
 {
 	STUAIPerceptionComponent = CreateDefaultSubobject<USTUAIPerceptionComponent>("STUPerceprionComponent");
 	SetPerceptionComponent(*STUAIPerceptionComponent); // Create and set PerceptionComponent
+
+	RespawnComponent = CreateDefaultSubobject<USTURespawnComponent>("RespawnComponent");
+
+
 
 	bWantsPlayerState = true; // Create player states for spawned in world controllers and pawns
 }

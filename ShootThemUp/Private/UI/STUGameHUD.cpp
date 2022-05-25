@@ -5,6 +5,9 @@
 #include "Engine/Canvas.h"
 #include "Blueprint/UserWidget.h"
 // For beginplay override
+#include "STUGameModeBase.h"
+
+DEFINE_LOG_CATEGORY_STATIC(LogSTUGameHUD, All, All);
 
 void ASTUGameHUD::DrawHUD()
 {
@@ -15,10 +18,26 @@ void ASTUGameHUD::DrawHUD()
 void ASTUGameHUD::BeginPlay()
 {
 	Super::BeginPlay();
-	auto PlayerHudWidget = CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass);
-	if (PlayerHudWidget)
+
+	GameWidgets.Add(ESTUMatchState::InProgress, CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass));
+	GameWidgets.Add(ESTUMatchState::Pause, CreateWidget<UUserWidget>(GetWorld(), PauseHUDWidgetClass));
+
+	for (auto GameWidgetPair : GameWidgets)
 	{
-		PlayerHudWidget->AddToViewport();
+		const auto GameWidget = GameWidgetPair.Value;
+		if (!GameWidget) continue;
+
+		GameWidget->AddToViewport();
+		GameWidget->SetVisibility(ESlateVisibility::Hidden);
+		// Add all widgets from map TMap<ESTUMatchState, UUserWidget*> GameWidgets; to viewport and hide 
+	}
+	if (GetWorld())
+	{
+		const auto GameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode());
+		if (GameMode)
+		{
+			GameMode->OnMatchStateChanged.AddUObject(this, &ASTUGameHUD::OnMatchStateChanged);
+		} // Sign on delegate
 	}
 }
 
@@ -30,4 +49,22 @@ void ASTUGameHUD::DrawCrossHair()
 	const FLinearColor LineColor = FLinearColor::Green;
 	DrawLine(Center.Min - HalfLineSize, Center.Max, Center.Min + HalfLineSize, Center.Max, LineColor, LineThickness);
 	DrawLine(Center.Min, Center.Max - HalfLineSize, Center.Min, Center.Max + HalfLineSize, LineColor, LineThickness);
+}
+
+void ASTUGameHUD::OnMatchStateChanged(ESTUMatchState State)
+{
+	if (CurrentWidget)
+	{
+		CurrentWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
+	if (GameWidgets.Contains(State))
+	{
+		CurrentWidget = GameWidgets[State];
+	}
+	if (CurrentWidget)
+	{
+		CurrentWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+
+	UE_LOG(LogSTUGameHUD, Display, TEXT("Match State Changed: %s"), *UEnum::GetValueAsString(State));
 }
