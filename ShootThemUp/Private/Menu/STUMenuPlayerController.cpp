@@ -11,5 +11,5 @@ void ASTUMenuPlayerController::BeginPlay()
 	SetInputMode(FInputModeUIOnly());
 	bShowMouseCursor = true;
 
-	GetWorld()->GetGameInstance<USTUGameInstance>()->TestString = "Menu level says hello";
+	// GetWorld()->GetGameInstance<USTUGameInstance>()->TestString = "Menu level says hello";
 }

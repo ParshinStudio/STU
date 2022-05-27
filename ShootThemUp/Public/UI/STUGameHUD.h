@@ -7,6 +7,8 @@
 #include "STUUtils.h"
 #include "STUGameHUD.generated.h"
 
+class USTUBaseWidget;
+
 UCLASS()
 class SHOOTTHEMUP_API ASTUGameHUD : public AHUD
 {
@@ -28,9 +30,9 @@ public:
 	virtual void DrawHUD() override;
 private:
 	UPROPERTY()
-	TMap<ESTUMatchState, UUserWidget*> GameWidgets;
+	TMap<ESTUMatchState, USTUBaseWidget*> GameWidgets;
 	UPROPERTY()
-	UUserWidget* CurrentWidget = nullptr;
+	USTUBaseWidget* CurrentWidget = nullptr;
 
 
 	void DrawCrossHair();

@@ -49,6 +49,8 @@ protected:
 	FName MaterialColorName = "Paint Color"; // Get in actor material color
 
 	virtual void BeginPlay() override;
+	virtual void OnHealthChanged(float Health, float HealthDelta);
+	// Health Change Function
 
 public:
 	virtual void Tick(float DeltaTime) override;
@@ -65,9 +67,6 @@ public:
 	void SetPlayerColor(const FLinearColor& Color);
 
 private:
-
-	void OnHealthChanged(float Health, float HealthDelta);
-	// Health Change Function
 
 	UFUNCTION()
 	void OnGroundLanded(const FHitResult& Hit);

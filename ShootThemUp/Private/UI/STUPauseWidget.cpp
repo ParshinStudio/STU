@@ -3,6 +3,7 @@
 
 #include "UI/STUPauseWidget.h"
 #include "Components/Button.h"
+#include "Kismet/GameplayStatics.h"
 #include "Gameframework/GameModeBase.h"
 
 void USTUPauseWidget::NativeOnInitialized()
