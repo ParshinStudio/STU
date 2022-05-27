@@ -12,6 +12,7 @@
 #include "Components/STUWeaponComponent.h"
 #include "Components/STUHealthComponent.h"
 #include "GameFramework/Pawn.h"
+#include "STUGameInstance.h"
 
 
 DEFINE_LOG_CATEGORY_STATIC(LogSTUGameModeBase, All, All);
@@ -30,6 +31,8 @@ ASTUGameModeBase::ASTUGameModeBase()
 void ASTUGameModeBase::StartPlay()
 {
 	Super::StartPlay();
+
+	UE_LOG(LogSTUGameModeBase, Warning, TEXT("%s"), *GetWorld()->GetGameInstance<USTUGameInstance>()->TestString);
 
 	SpawnBots();
 	CreateTeamsInfo();
@@ -123,6 +126,7 @@ void ASTUGameModeBase::CreateTeamsInfo()
 
 		PlayerState->SetTeamID(TeamID);  // Seter function in state
 		PlayerState->SetTeamColor(DetermineColorByTeam(TeamID)); // Seter function in state
+		PlayerState->SetPlayerName(Controller->IsPlayerController() ? "Player" : "Bot");
 		SetPlayerColor(Controller); 
 
 		TeamID = TeamID == 1 ? 2 : 1; // Change each other

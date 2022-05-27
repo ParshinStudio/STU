@@ -33,7 +33,8 @@ public:
 	void OnTakeDamage();
 	// Allow call function from bp graph
 
-	virtual bool Initialize() override;
+protected:
+	virtual void NativeOnInitialized() override;
 
 private:
 	void OnHealthChanged(float Health, float HealthDelta);

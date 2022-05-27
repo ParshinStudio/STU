@@ -45,15 +45,16 @@ bool USTUPlayerHUDWidget::IsPlayerSpectating() const
 	return Controller && Controller->GetStateName() == NAME_Spectating;
 }
 
-bool USTUPlayerHUDWidget::Initialize()
+void USTUPlayerHUDWidget::NativeOnInitialized()
 {
+	Super::NativeOnInitialized();
+	
 	if (GetOwningPlayer())
 	{
 		GetOwningPlayer()->GetOnNewPawnNotifier().AddUObject(this, &USTUPlayerHUDWidget::OnNewPawn);
 		// When new pawn, OnNewPawn calling (delegate in engine controller)
 	}
 	OnNewPawn(GetOwningPlayerPawn()); // First time need to call manually to get new pawn
-	return Super::Initialize();
 }
 void USTUPlayerHUDWidget::OnHealthChanged(float Health, float HealthDelta)
 {
