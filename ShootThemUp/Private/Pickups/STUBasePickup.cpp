@@ -5,6 +5,9 @@
 #include "Components/SphereComponent.h"
 #include "Math/UnrealMathUtility.h"
 
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
+
 DEFINE_LOG_CATEGORY_STATIC(LogBasePickup, All, All)
 
 ASTUBasePickup::ASTUBasePickup()
@@ -36,7 +39,7 @@ void ASTUBasePickup::NotifyActorBeginOverlap(AActor* OtherActor)
 	Super::NotifyActorBeginOverlap(OtherActor); // In engine function replace
 
 	const auto Pawn = Cast<APawn>(OtherActor); // Get Pawn pointer
-	if(GivePickupTo(Pawn)) // Send pointer to func and return true
+	if (GivePickupTo(Pawn)) // Send pointer to func and return true
 	{
 		PickupWasTaken();
 	}
@@ -56,6 +59,10 @@ void ASTUBasePickup::PickupWasTaken()
 	}
 	FTimerHandle RespawnTimerHandle;
 	GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ASTUBasePickup::Respawn, RespawnTime);
+	if (PickupSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), PickupSound, GetActorLocation());
+	}
 }
 void ASTUBasePickup::Respawn()
 {

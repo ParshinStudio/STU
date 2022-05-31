@@ -90,6 +90,11 @@ void ASTUPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	// WeaponComponent, &USTUWeaponComponent::Fire is direct function calling
 	// Jump is engine function
 	// Bind Axis/Action in InputComponent to functions and pawn
+
+	DECLARE_DELEGATE_OneParam(FZoomInputSignature, bool);
+	PlayerInputComponent->BindAction<FZoomInputSignature>("Zoom", IE_Pressed, WeaponComponent, &USTUWeaponComponent::Zoom, true);
+	PlayerInputComponent->BindAction<FZoomInputSignature>("Zoom", IE_Released, WeaponComponent, &USTUWeaponComponent::Zoom, false);
+	// Action for camera zoom
 }
 
 void ASTUPlayerCharacter::MoveForward(float Amount)

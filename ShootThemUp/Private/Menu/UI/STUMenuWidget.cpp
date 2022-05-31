@@ -10,6 +10,8 @@
 #include "Components/HorizontalBox.h"
 #include "Menu/UI/STULevelItemWidget.h"
 
+#include "Sound/SoundCue.h"
+
 DEFINE_LOG_CATEGORY_STATIC(LogMenuWidget, All, All)
 
 void USTUMenuWidget::NativeOnInitialized()
@@ -30,6 +32,7 @@ void USTUMenuWidget::NativeOnInitialized()
 void USTUMenuWidget::OnStartGame()
 {
 	PlayAnimation(HideAnimation);
+	UGameplayStatics::PlaySound2D(GetWorld(), StartGameSound);
 
 }
 

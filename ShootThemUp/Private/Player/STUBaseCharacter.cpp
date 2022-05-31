@@ -21,6 +21,9 @@
 #include "Components/CapsuleComponent.h"
 // Allow to work with Capsule
 
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
+
 DEFINE_LOG_CATEGORY_STATIC(BaseCharacterLog, All, All)
 
 ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInit):Super(ObjInit.SetDefaultSubobjectClass<USTUCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -98,10 +101,12 @@ void ASTUBaseCharacter::OnDeath()
 	//Ignore collision after dead
 	WeaponComponent->StopFire();
 	//Stop timers when dead
-
+	WeaponComponent->Zoom(false);
+	// Reset camera zoom
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	GetMesh()->SetSimulatePhysics(true); 
 	// Enable mesh relaxation
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), DeathSound, GetActorLocation());
 }
 
 void ASTUBaseCharacter::OnHealthChanged(float Health, float HealthDelta)

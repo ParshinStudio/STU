@@ -4,6 +4,8 @@
 #include "Weapon/STULauncherWeapon.h"
 #include "Weapon/STUProjectile.h"
 // Allow calling Projectile functions from class
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 void ASTULauncherWeapon::StartFire()
 {
@@ -12,9 +14,11 @@ void ASTULauncherWeapon::StartFire()
 
 void ASTULauncherWeapon::MakeShot()
 {
-	if (!GetWorld() || IsAmmoEmpty())
+	if (!GetWorld()) return;
+	if(IsAmmoEmpty())	
 	{
 		StopFire();
+		UGameplayStatics::SpawnSoundAtLocation(GetWorld(), NoAmmoSound, GetActorLocation());
 		return;
 		// Stop timer if no ammo in clip or no ammo
 	}
@@ -34,7 +38,6 @@ void ASTULauncherWeapon::MakeShot()
 	const FVector EndPoint = HitResult.bBlockingHit ? HitResult.ImpactPoint : TraceEnd;
 	const FVector Direction = (EndPoint - GetMuzzleWorldLocation()).GetSafeNormal();
 
-
 	const FTransform SpawnTransform(FRotator::ZeroRotator, GetMuzzleWorldLocation());
 	// Spawn Transwform for object in MuzzleSocket
 	ASTUProjectile* Projectile = GetWorld()->SpawnActorDeferred<ASTUProjectile>(ProjectileClass, SpawnTransform);
@@ -51,4 +54,5 @@ void ASTULauncherWeapon::MakeShot()
 
 	DecreseAmmo();
 	SpawnMuzzleFX();
+	UGameplayStatics::SpawnSoundAttached(FireSound, WeaponMesh, MuzzleSocketName);
 }

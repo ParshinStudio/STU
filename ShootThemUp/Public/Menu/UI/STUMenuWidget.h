@@ -13,6 +13,7 @@ class UButton;
 class UHorizontalBox;
 class USTULevelItemWidget;
 class USTUGameInstance;
+class USoundCue;
 
 
 UCLASS()
@@ -36,6 +37,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UUserWidget> LevelItemWidgetClass;
 	// Widget to create (choose in editor)
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+	USoundCue* StartGameSound;
 
 	virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;
 

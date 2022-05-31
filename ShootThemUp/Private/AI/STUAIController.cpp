@@ -15,8 +15,6 @@ ASTUAIController::ASTUAIController()
 
 	RespawnComponent = CreateDefaultSubobject<USTURespawnComponent>("RespawnComponent");
 
-
-
 	bWantsPlayerState = true; // Create player states for spawned in world controllers and pawns
 }
 

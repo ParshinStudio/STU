@@ -72,7 +72,7 @@ void ASTUGameModeBase::StartRound()
 }
 void ASTUGameModeBase::GameTimerUpdate()
 {
-	UE_LOG(LogSTUGameModeBase, Display, TEXT("Time: %i / Round: %i/%i"), RoundCoundown, CurrentRound, GameData.RoundsNum);
+	//UE_LOG(LogSTUGameModeBase, Display, TEXT("Time: %i / Round: %i/%i"), RoundCoundown, CurrentRound, GameData.RoundsNum);
 
 	//const auto TimerRate = GetWorldTimerManager().GetTimerRate(GameRoundTimerHandle);
 	//RoundCoundown -= TimerRate;

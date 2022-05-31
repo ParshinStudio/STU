@@ -7,12 +7,10 @@
 #include "STUCoreTypes.h"
 #include "STUBaseWeapon.generated.h"
 
-
-
 class USkeletalMeshComponent;
 class UNiagaraSystem;
 class UNiagaraComponent;
-
+class USoundCue;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseWeapon : public AActor
@@ -40,6 +38,8 @@ public:
 	bool IsAmmoEmpty() const;
 	bool IsAmmoFull() const; // for ammo add and decorator
 
+	virtual void Zoom(bool Enabled) {}
+
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -62,6 +62,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UNiagaraSystem* MuzzleFX;
 	// Socket Niagara system in weapon
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+	USoundCue* FireSound;
 	
 	virtual void BeginPlay() override;
 

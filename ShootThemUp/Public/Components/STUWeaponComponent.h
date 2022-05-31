@@ -33,6 +33,8 @@ public:
 
 	bool NeedAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType);
 
+	void Zoom(bool Enabled);
+
 protected:
 
 	UPROPERTY()

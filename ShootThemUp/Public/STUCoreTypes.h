@@ -5,6 +5,8 @@
 // Weapon base class
 class ASTUBaseWeapon;
 
+class USoundCue;
+
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnClipEmptySignature, ASTUBaseWeapon*);
 
 // Ammo struct
@@ -81,6 +83,8 @@ struct FImpactData
     UNiagaraSystem* NiagaraEffect;
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
     FDecalData DecalData;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+    USoundCue* Sound;
 
 };
 

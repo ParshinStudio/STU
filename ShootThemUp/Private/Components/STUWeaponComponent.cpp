@@ -83,6 +83,7 @@ void USTUWeaponComponent::EquipWeapon(int32 WeaponIndex)
 
 	if (CurrentWeapon) // Nullptr when beginplay
 	{
+		CurrentWeapon->Zoom(false);
 		CurrentWeapon->StopFire();
 		// Stop timer when equip another weapon
 		AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponArmorySocketName);
@@ -271,4 +272,12 @@ bool USTUWeaponComponent::NeedAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType)
 		}
 	}
 	return false; 
+}
+
+void  USTUWeaponComponent::Zoom(bool Enabled)
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->Zoom(Enabled);
+	}
 }

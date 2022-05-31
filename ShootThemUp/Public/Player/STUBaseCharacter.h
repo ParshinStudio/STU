@@ -13,6 +13,8 @@ class USTUHealthComponent;
 // Declare TextRenderComponent
 class USTUWeaponComponent;
 
+class USoundCue;
+
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
 {
@@ -51,6 +53,9 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void OnHealthChanged(float Health, float HealthDelta);
 	// Health Change Function
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+	USoundCue* DeathSound;
 
 public:
 	virtual void Tick(float DeltaTime) override;

@@ -7,6 +7,7 @@
 #include "STUCoreTypes.h"
 #include "STUGameInstance.generated.h"
 
+class USoundClass;
 
 UCLASS()
 class SHOOTTHEMUP_API USTUGameInstance : public UGameInstance
@@ -22,6 +23,9 @@ public:
 	// Return array with setted levels
 
 	FName GetMenuLevelName() const { return MenuLevelName; }
+
+	void ToggleVolume();
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Game")
 	TArray<FLevelData> LevelsData;
@@ -29,6 +33,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Game")
 	FName MenuLevelName = NAME_None;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	USoundClass* MasterSoundClass;
 
 private:
 

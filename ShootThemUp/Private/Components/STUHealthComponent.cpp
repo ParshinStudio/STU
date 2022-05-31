@@ -14,6 +14,7 @@
 // Allow work with timer and world time
 #include "Camera/CameraComponent.h"
 #include "STUGameModeBase.h"
+#include "Perception/AISense_Damage.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All)
 
@@ -63,6 +64,7 @@ void USTUHealthComponent::OnTakeAnyDamage(AActor* DamagedActor, float Damage, co
 	// If alive, check Autoheal true, Get timer from world and set timer with params
 	// (HealTimerHandle(Timer body), actor which is timer inside, call function inside, Update rate(calling function every...) , Replay?, Delay before start
 	PlayCameraShake();
+	ReportDamageEvent(Damage, InstigatedBy);
 }
 
 void USTUHealthComponent::HealUpdate()
@@ -115,4 +117,10 @@ void USTUHealthComponent::Killed(AController* KillerController)
 	const auto VictimController = Player ? Player->Controller : nullptr;
 
 	GameMode->Killed(KillerController, VictimController);
+}
+
+void USTUHealthComponent::ReportDamageEvent(float Damage, AController* InstigatedBy)
+{
+	if (!InstigatedBy || !InstigatedBy->GetPawn() || !GetOwner()) return;
+	UAISense_Damage::ReportDamageEvent(GetWorld(), GetOwner(), InstigatedBy->GetPawn(), Damage, InstigatedBy->GetPawn()->GetActorLocation(), GetOwner()->GetActorLocation());
 }

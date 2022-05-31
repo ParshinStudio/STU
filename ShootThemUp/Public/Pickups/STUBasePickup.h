@@ -7,6 +7,7 @@
 #include "STUBasePickup.generated.h"
 
 class USphereComponent;
+class USoundCue;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUBasePickup : public AActor
@@ -29,6 +30,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Pickup")
 	bool CouldBeTakenTest = true;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+	USoundCue* PickupSound;
 
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
